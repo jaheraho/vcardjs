@@ -26,16 +26,16 @@ var VCF;
             'NOTE', // 6.7.2
             'PRODID', // 6.7.3
             'SOUND', // 6.7.5
-            'UID', // 6.7.6
+            'UID' // 6.7.6
         ],
         csvKeys: [
             'NICKNAME', // 6.2.3
-            'CATEGORIES', // 6.7.1
+            'CATEGORIES' // 6.7.1
         ],
         dateAndOrTimeKeys: [
             'BDAY',        // 6.2.5
             'ANNIVERSARY', // 6.2.6
-            'REV', // 6.7.4
+            'REV' // 6.7.4
         ],
 
         // parses the given input, constructing VCard objects.
@@ -220,7 +220,7 @@ var VCF;
         dateRE: /^(\d{4})(\d{2})(\d{2})$/, // (19700131)
 
         // [ISO.8601.2004], 4.1.2.3 a), basic format:
-        dateReducedARE: /^(\d{4})\-(\d{2})$/, // (1970-01)
+        dateReducedARE: /^(\d{4})-(\d{2})$/, // (1970-01)
 
         // [ISO.8601.2004], 4.1.2.3 b), basic format:
         dateReducedBRE: /^(\d{4})$/, // (1970)
@@ -228,8 +228,8 @@ var VCF;
         // truncated representation from [ISO.8601.2000], 5.3.1.4.
         // I don't have access to that document, so relying on examples
         // from RFC 6350:
-        dateTruncatedMDRE: /^\-{2}(\d{2})(\d{2})$/, // (--0131)
-        dateTruncatedDRE: /^\-{3}(\d{2})$/, // (---31)
+        dateTruncatedMDRE: /^-{2}(\d{2})(\d{2})$/, // (--0131)
+        dateTruncatedDRE: /^-{3}(\d{2})$/, // (---31)
 
         /** TIME **/
 
@@ -244,8 +244,8 @@ var VCF;
         // [ISO.8601.2004, 4.2.2.3 b), basic format:
         timeReducedBRE: /^(\d{2})([+\-]\d+|Z|)$/, // (23)
         // truncated representation from [ISO.8601.2000], see above.
-        timeTruncatedMSRE: /^\-{2}(\d{2})(\d{2})([+\-]\d+|Z|)$/, // (--5930)
-        timeTruncatedSRE: /^\-{3}(\d{2})([+\-]\d+|Z|)$/, // (---30)
+        timeTruncatedMSRE: /^-{2}(\d{2})(\d{2})([+\-]\d+|Z|)$/, // (--5930)
+        timeTruncatedSRE: /^-{3}(\d{2})([+\-]\d+|Z|)$/, // (---30)
 
         parseDate: function(data) {
             var md;
@@ -308,7 +308,7 @@ var VCF;
 
         // add two dates. if addSub is false, substract instead of add.
         addDates: function(aDate, bDate, addSub) {
-            if(typeof(addSub) == 'undefined') { addSub = true };
+            if(typeof(addSub) == 'undefined') { addSub = true }
             if(! aDate) { return bDate; }
             if(! bDate) { return aDate; }
             var a = Number(aDate);
@@ -438,27 +438,29 @@ var VCF;
             }
 
             for(var i in line) {
-                var c = line[i];
+                if (line.hasOwnProperty(i)) {
+                    var c = line[i];
 
-                switch(c) {
-                case ':':
-                    finalizeKeyOrAttr();
-                    value = line.slice(Number(i) + 1);
-                    callback.apply(
-                        this,
-                        [key, value, attrs]
-                    );
-                    return;
-                case ';':
-                    finalizeKeyOrAttr();
-                    tmp = '';
-                    break;
-                case '=':
-                    attrKey = tmp;
-                    tmp = '';
-                    break;
-                default:
-                    tmp += c;
+                    switch(c) {
+                    case ':':
+                        finalizeKeyOrAttr();
+                        value = line.slice(Number(i) + 1);
+                        callback.apply(
+                            this,
+                            [key, value, attrs]
+                        );
+                        return;
+                    case ';':
+                        finalizeKeyOrAttr();
+                        tmp = '';
+                        break;
+                    case '=':
+                        attrKey = tmp;
+                        tmp = '';
+                        break;
+                    default:
+                        tmp += c;
+                    }
                 }
             }
         },
@@ -473,11 +475,12 @@ var VCF;
         **/
         decodeQP: function(str){
             str = (str || "").toString();
-            str = str.replace(/\=(?:\r?\n|$)/g, "");
+            str = str.replace(/=(?:\r?\n|$)/g, "");
             var str2 = "";
             for(var i=0, len = str.length; i<len; i++){
-                chr = str.charAt(i);
-                if(chr == "=" && (hex = str.substr(i+1, 2)) && /[\da-fA-F]{2}/.test(hex)){
+                var chr = str.charAt(i);
+                var hex = str.substr(i+1, 2);
+                if(chr == "=" && hex && /[\da-fA-F]{2}/.test(hex)){
                     str2 += String.fromCharCode(parseInt(hex,16));
                     i+=2;
                     continue;
