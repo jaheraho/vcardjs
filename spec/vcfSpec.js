@@ -234,6 +234,29 @@ describe('VCF', function () {
             }
         });
 
+        it('parses a three-part name, when protoype of Array is augmented', function () {
+            Array.prototype.foo = function () { };
+            var vcard =
+                "BEGIN:VCARD\r\n" +
+                "VERSION:4.0\r\n" +
+                "N:Lessing;Gotthold;Ephraim;;\r\n" +
+                "END:VCARD\r\n";
+
+            var testVCard = jasmine.createSpy('testVCard');
+
+            VCF.parse(vcard, testVCardInstance);
+
+            function testVCardInstance(vc) {
+                expect(vc.n['family-name'][0]).toBe('Lessing');
+                expect(vc.n['given-name'][0]).toBe('Gotthold');
+                expect(vc.n['additional-name'][0]).toBe('Ephraim');
+
+                //foo is set to undefined so other tests would fail as well.
+                //keep it in here for documentation
+                delete Array.prototype.foo;
+            }
+        });
+
         it('parses a complex name with all parts and multiple values per part is set', function () {
             var vcard =
                 "BEGIN:VCARD\r\n" +

@@ -164,10 +164,9 @@ var VCF;
         parseName: function(name) { // 6.2.2
             var parts = name.split(';');
             var n = {};
-            for(var i in parts) {
-                if(parts[i]) {
-                    n[this.nameParts[i]] = parts[i].split(',');
-                }
+            for (var i = 0; i < parts.length; i++) {
+                n[this.nameParts[i]] = parts[i].split(',');
+
             }
             return n;
         },
