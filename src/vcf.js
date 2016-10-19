@@ -165,7 +165,7 @@ var VCF;
             var parts = name.split(';');
             var n = {};
             for (var i = 0; i < parts.length; i++) {
-                n[this.nameParts[i]] = parts[i].split(',');
+                n[this.nameParts[i]] = decodeURIComponent(escape(parts[i])).split(',');
 
             }
             return n;
@@ -486,7 +486,7 @@ var VCF;
                 }
                 str2 += chr;
             }
-            return decodeURIComponent(escape(str2));
+            return str2;
         }
 
     };
