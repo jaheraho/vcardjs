@@ -486,7 +486,7 @@ var VCF;
                 }
                 str2 += chr;
             }
-            return str2;
+            return decodeURIComponent(escape(str2));
         }
 
     };

@@ -264,8 +264,6 @@ describe('VCF', function () {
                 "N:Lessing;Gotthold;Ephraim,Soundso;Dr.,Prof.;von und zu hier und da\r\n" +
                 "END:VCARD\r\n";
 
-            var testVCard = jasmine.createSpy('testVCard');
-
             VCF.parse(vcard, testVCardInstance);
 
             function testVCardInstance(vc) {
@@ -286,8 +284,6 @@ describe('VCF', function () {
                 "NICKNAME:foo,bar,baz\r\n" +
                 "END:VCARD\r\n";
 
-            var testVCard = jasmine.createSpy('testVCard');
-
             VCF.parse(vcard, testVCardInstance);
 
             function testVCardInstance(vc) {
@@ -304,14 +300,24 @@ describe('VCF', function () {
                 "BDAY:--0417\r\n" +
                 "END:VCARD";
 
-            var testVCard = jasmine.createSpy('testVCard');
-
             VCF.parse(vcard, testVCardInstance);
 
             function testVCardInstance(vc) {
                 expect(vc.bday.getUTCDate()).toBe(17);
                 expect(vc.bday.getUTCMonth()).toBe(3);
             }
+        });
+
+        it('decodes printable-quoted strings quoted in UTF-8 correctly', function () {
+            var vcard =
+                "BEGIN:VCARD\r\n" +
+                "VERSION:4.0\r\n" +
+                "N;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=45=62=65=72=68=61=72=64=74;=42=6A=C3=B6=72=6E;;;\r\n" +
+                "END:VCARD";
+
+            VCF.parse(vcard, function (vc) {
+                expect(vc.n['given-name'][0]).toBe("Björn");
+            });
         });
 
         testGender('male without identity', 'M', {sex: 'male'});
