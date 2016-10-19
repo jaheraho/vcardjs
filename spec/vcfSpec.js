@@ -320,6 +320,34 @@ describe('VCF', function () {
             });
         });
 
+        it('parses a URL', function () {
+            var vcard =
+            "BEGIN:VCARD\r\n" +
+            "VERSION:4.0\r\n" +
+            "URL:http://www.google.com\r\n" +
+            "END:VCARD";
+
+            VCF.parse(vcard, function (vc) {
+                expect(vc.url[0].value).toBe("http://www.google.com");
+            });
+        });
+
+        it('parses multiple URLs', function () {
+            var vcard =
+                "BEGIN:VCARD\r\n" +
+                "VERSION:4.0\r\n" +
+                "URL:http://www.google.com\r\n" +
+                "URL:http://www.google.de\r\n" +
+                "URL:http://www.google.eu\r\n" +
+                "END:VCARD";
+
+            VCF.parse(vcard, function (vc) {
+                expect(vc.url[0].value).toBe("http://www.google.com");
+                expect(vc.url[1].value).toBe("http://www.google.de");
+                expect(vc.url[2].value).toBe("http://www.google.eu");
+            });
+        });
+
         testGender('male without identity', 'M', {sex: 'male'});
         testGender("female without identity", "F", {sex:'female'});
         testGender("female with identity", "F;boy", {sex:'female',identity:'boy'});

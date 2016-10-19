@@ -149,10 +149,14 @@ var VCF;
                         pref: attrs.PREF,
                         value: value
                     });
-                    //TODO: Handle 'LABEL' field.
+                } else if(key =='URL'){
+                    setAttr({
+                        value: value
+                    });
                 } else {
                     console.log('WARNING: unhandled key: ', key);
                 }
+                //TODO: Handle 'LABEL' field.
             });
         },
         

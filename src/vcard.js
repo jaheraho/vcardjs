@@ -198,7 +198,7 @@ var VCard;
         'fn', 'n', 'nickname', 'photo', 'bday', 'anniversary', 'gender',
         'tel', 'email', 'impp', 'lang', 'tz', 'geo', 'title', 'role', 'logo',
         'org', 'member', 'related', 'categories', 'note', 'prodid', 'rev',
-        'sound', 'uid'
+        'sound', 'uid', 'url'
     ];
 
     VCard.multivaluedKeys = {
@@ -212,7 +212,8 @@ var VCard;
         member: true,
         related: true,
         categories: true,
-        note: true
+        note: true,
+        url: true
     };
 
 })();
