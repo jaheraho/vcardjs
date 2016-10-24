@@ -1,7 +1,7 @@
 {
   "name": "vcardjs",
   "desc": "vCardJS - a vCard 4.0 implementation in JavaScript.",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": false,
   "license": "MIT",
   "repository": {
@@ -16,5 +16,8 @@
     "karma": "^1.3.0",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.2"
+  },
+  "dependencies": {
+    "utf8": "^2.1.2"
   }
 }

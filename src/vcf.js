@@ -169,7 +169,7 @@ var VCF;
             var parts = name.split(';');
             var n = {};
             for (var i = 0; i < parts.length; i++) {
-                n[this.nameParts[i]] = decodeURIComponent(escape(parts[i])).split(',');
+                n[this.nameParts[i]] = parts[i].split(',');
 
             }
             return n;
@@ -371,7 +371,7 @@ var VCF;
 
             var md, line = null, length = 0;
 
-            for(;;) {
+            do {
                 if((md = input.match(this.lineRE))) {
                     // Unfold quoted-printables (vCard 2.1) into a single line before parsing.
                     // "Soft" linebreaks are indicated by a '=' at the end of the line, and do
@@ -398,11 +398,7 @@ var VCF;
                 }
 
                 input = input.slice(length);
-
-                if(! input) {
-                    break;
-                }
-            }
+            } while (input);
 
             if(line) {
                 // last line.
@@ -419,7 +415,11 @@ var VCF;
             //If our value is a quoted-printable (vCard 2.1), decode it and discard the encoding attribute
             var qp = line.indexOf('ENCODING=QUOTED-PRINTABLE');
             if(qp != -1){
-                line = line.substr(0,qp) + this.decodeQP(line.substr(qp+25));
+                var decodedPart = this.decodeQuotedPrintable(line.substr(qp+25));
+                if (line.toLowerCase().indexOf('utf-8') != -1) {
+                    decodedPart = utf8.decode(decodedPart);
+                }
+                line = line.substr(0,qp) + decodedPart;
             }
 
             function finalizeKeyOrAttr() {
@@ -476,7 +476,7 @@ var VCF;
           * https://github.com/andris9/mimelib
           *
         **/
-        decodeQP: function(str){
+        decodeQuotedPrintable: function(str){
             str = (str || "").toString();
             str = str.replace(/=(?:\r?\n|$)/g, "");
             var str2 = "";
@@ -484,6 +484,7 @@ var VCF;
                 var chr = str.charAt(i);
                 var hex = str.substr(i+1, 2);
                 if(chr == "=" && hex && /[\da-fA-F]{2}/.test(hex)){
+                    console.log(hex + ': ' + parseInt(hex,16));
                     str2 += String.fromCharCode(parseInt(hex,16));
                     i+=2;
                     continue;

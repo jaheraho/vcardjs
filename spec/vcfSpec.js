@@ -312,7 +312,7 @@ describe('VCF', function () {
             var vcard =
                 "BEGIN:VCARD\r\n" +
                 "VERSION:4.0\r\n" +
-                "N;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=45=62=65=72=68=61=72=64=74;=42=6A=C3=B6=72=6E;;;\r\n" +
+                "N;CHARSET=utf-8;ENCODING=QUOTED-PRINTABLE:=45=62=65=72=68=61=72=64=74;=42=6A=C3=B6=72=6E;;;\r\n" +
                 "END:VCARD";
 
             VCF.parse(vcard, function (vc) {
@@ -329,6 +329,19 @@ describe('VCF', function () {
 
             VCF.parse(vcard, function (vc) {
                 expect(vc.url[0].value).toBe("http://www.google.com");
+            });
+        });
+
+        it('parses umlauts', function () {
+            var vcard =
+                "BEGIN:VCARD\r\n" +
+                "VERSION:4.0\r\n" +
+                "N;CHARSET=utf-8:Äß;üö;;;\r\n" +
+                "END:VCARD";
+
+            VCF.parse(vcard, function (vc) {
+                expect(vc.n['given-name'][0]).toBe("üö");
+                expect(vc.n['family-name'][0]).toBe("Äß");
             });
         });
 

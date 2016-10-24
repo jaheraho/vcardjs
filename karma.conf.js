@@ -13,6 +13,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'node_modules/utf8/utf8.js',
             'src/*.js',
             'spec/*Spec.js'
         ],
