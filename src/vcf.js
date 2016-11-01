@@ -144,10 +144,18 @@ var VCF;
                     });
 
                 } else if(key =='ADR'){
+                    var adrParts = value.split(';');
                     setAttr({
                         type: attrs.TYPE,
                         pref: attrs.PREF,
-                        value: value
+                        value: value,
+                        pobox: adrParts[0],
+                        ext: adrParts[1],
+                        street: adrParts[2],
+                        locality: adrParts[3],
+                        region: adrParts[4],
+                        code: adrParts[5],
+                        country: adrParts[6]
                     });
                 } else if(key =='URL'){
                     setAttr({

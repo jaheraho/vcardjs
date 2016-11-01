@@ -361,6 +361,44 @@ describe('VCF', function () {
             });
         });
 
+        it('parses an ADR', function () {
+            var vcard =
+                "BEGIN:VCARD\r\n" +
+                "VERSION:4.0\r\n" +
+                "URL:http://www.google.com\r\n" +
+                "URL:http://www.google.de\r\n" +
+                "URL:http://www.google.eu\r\n" +
+                "ADR;TYPE=work:Postfach1;Stadtteil1;street1;Hansestadt Bremen;Bremen;28217;Deutschland\r\n" +
+                "END:VCARD";
+
+            VCF.parse(vcard, function (vc) {
+                expect(vc.adr.length).toBe(1);
+                expect(vc.adr[0].type[0]).toBe('work');
+                expect(vc.adr[0].pobox).toBe('Postfach1');
+                expect(vc.adr[0].ext).toBe('Stadtteil1');
+                expect(vc.adr[0].street).toBe('street1');
+                expect(vc.adr[0].locality).toBe('Hansestadt Bremen');
+                expect(vc.adr[0].region).toBe('Bremen');
+                expect(vc.adr[0].code).toBe('28217');
+                expect(vc.adr[0].country).toBe('Deutschland');
+            });
+        });
+        it('parses multiple ADR', function () {
+            var vcard =
+                "BEGIN:VCARD\r\n" +
+                "VERSION:4.0\r\n" +
+                "URL:http://www.google.com\r\n" +
+                "URL:http://www.google.de\r\n" +
+                "URL:http://www.google.eu\r\n" +
+                "ADR;TYPE=work:Postfach1;Stadtteil1;street1;Hansestadt Bremen;Bremen;28217;Deutschland\r\n" +
+                "ADR;TYPE=home:Postfach2;Stadtteil2;street2;Hansestadt Hamburg;Hamburg;20221;Deutschland\r\n" +
+                "END:VCARD";
+
+            VCF.parse(vcard, function (vc) {
+                expect(vc.adr.length).toBe(2);
+            });
+        });
+
         testGender('male without identity', 'M', {sex: 'male'});
         testGender("female without identity", "F", {sex:'female'});
         testGender("female with identity", "F;boy", {sex:'female',identity:'boy'});

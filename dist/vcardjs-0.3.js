@@ -735,7 +735,7 @@ var VCF;
             //If our value is a quoted-printable (vCard 2.1), decode it and discard the encoding attribute
             var qp = line.indexOf('ENCODING=QUOTED-PRINTABLE');
             if(qp != -1){
-                line = line.substr(0,qp) + this.decodeQP(line.substr(qp+25));
+                line = line.substr(0,qp) + this.decodeQuotedPrintable(line.substr(qp+25));
             }
 
             function finalizeKeyOrAttr() {
@@ -790,7 +790,7 @@ var VCF;
           * https://github.com/andris9/mimelib
           *
         **/
-        decodeQP: function(str){
+        decodeQuotedPrintable: function(str){
             str = (str || "").toString();
             str = str.replace(/\=(?:\r?\n|$)/g, "");
             var str2 = "";

@@ -190,8 +190,7 @@ var VCard;
         // FIXME: these aren't actually defined anywhere. just very commmon.
         //        maybe there should be more?
         emailType: ["work", "home", "internet"],
-        langType: ["work", "home"],
-        
+        langType: ["work", "home"]
     };
 
     VCard.allKeys = [
@@ -213,7 +212,8 @@ var VCard;
         related: true,
         categories: true,
         note: true,
-        url: true
+        url: true,
+        adr: true
     };
 
 })();
